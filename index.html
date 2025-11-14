@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NALUA — Apoio e Conscientização em Saúde Mental</title>
 
-  <link rel="icon" type="image/png" href="favicon.png">
+ <div id="logo">
+  <img src="favicon_512.png" alt="Logo NALUA">
+</div>
 
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
-<body>
-<header>
-  <div class="header-left">
-    <img id="site-logo" src="favicon.png" alt="Logo Na Lua">
-    <p class="subtitle">Apoio e Conscientização em Saúde Mental</p>
-  </div>
 
+<header>
+  <div id="logo"></div>
+  <div class="title">
+    <h1>NALUCA</h1>
+    <p>Apoio e Conscientização em Saúde Mental</p>
+  </div>
   <nav>
     <a href="#inicio">Início</a>
     <a href="#noticias">Notícias</a>
@@ -29,11 +29,9 @@
 </header>
 
 <main class="container">
-
-  <!-- HERO -->
   <section id="inicio" class="hero card">
     <div class="left">
-      <h2>Bem-vindo à NALUA</h2>
+      <h2>Bem-vindo à NALUCA</h2>
       <p>Plataforma de apoio, informações e direcionamento em saúde mental — acessível, segura e com conteúdos atualizados.</p>
       <div class="buttons">
         <button class="chat-btn" id="openChatBtn">💬 Quero ajuda</button>
@@ -48,7 +46,6 @@
 
   <div class="grid">
     <div>
-      <!-- NOTÍCIAS -->
       <section id="noticias" class="card">
         <h3>Notícias & Atualizações</h3>
         <p class="hint">Últimas informações — atualizadas automaticamente.</p>
@@ -56,11 +53,10 @@
         <button id="loadNews" class="chat-btn secondary">🔄 Atualizar agora</button>
       </section>
 
-      <!-- AJUDA RÁPIDA -->
       <section id="ajuda" class="card">
         <h3>Recursos de Ajuda Rápida</h3>
         <ul>
-          <li>Contato via WhatsApp.</li>
+          <li>Contato via WhatsApp (exemplo).</li>
           <li>Links úteis: CVV, CAPS, CRAS.</li>
           <li>Comunidades online seguras.</li>
         </ul>
@@ -72,23 +68,11 @@
     </div>
 
     <aside>
-      <!-- MAPA -->
       <section id="mapa" class="card">
         <h3>Mapa de Apoio</h3>
-
-        <!-- FILTROS (agora fora do mapa, SEM flutuar em cima dele) -->
-        <div id="map-filters-inline">
-          <button class="filter-btn" data-filter="all">Todos</button>
-          <button class="filter-btn caps" data-filter="caps">CAPS</button>
-          <button class="filter-btn acolhimento" data-filter="clinicas">Clínicas</button>
-          <button class="filter-btn psicologos" data-filter="psicologos">Psicólogos</button>
-          <button class="filter-btn gratuitos" data-filter="gratuitos">Gratuitos</button>
-        </div>
-
         <div id="map"></div>
       </section>
 
-      <!-- CHATBOT -->
       <section id="chatbot" class="card">
         <h3>Chatbot</h3>
         <p>Mensagem de acolhimento e botão de atendimento.</p>
@@ -102,11 +86,10 @@
   </footer>
 </main>
 
-<!-- MODAL CHATBOT -->
 <div class="modal" id="chatModal">
   <div class="panel">
     <button class="close-btn" id="closeModal">&times;</button>
-    <h3>Acolhimento — NA LUA</h3>
+    <h3>Acolhimento — NALUCA</h3>
     <p id="welcomeText"></p>
     <div class="buttons">
       <a id="waSendBtn" class="chat-btn" href="#" target="_blank">💬 Enviar para atendimento</a>
