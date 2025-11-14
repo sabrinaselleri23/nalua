@@ -21,7 +21,7 @@ body {
 header {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 18px;
   padding: 18px 24px;
   background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
   position: sticky;
@@ -34,13 +34,13 @@ header {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px; /* Ajuste se quiser deixar mais distante */
+  gap: 16px; 
 }
 
 #site-logo {
   width: 120px;   /* aumente para 80px, 100px, 120px... */
   height: auto;
-  border-radius: 10px;
+  border-radius: 50px;
   object-fit: contain;
 }
 
