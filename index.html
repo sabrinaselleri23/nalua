@@ -3,70 +3,43 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title> NALUA — Apoio e Conscientização em Saúde Mental</title>
   <title>NALUA — Apoio e Conscientização em Saúde Mental</title>
 
-  <!-- CSS do site -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Ícone do site -->
+  <link rel="icon" type="image/png" href="favicon.png">
 
-  <!-- Leaflet -->
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Correção necessária: altura do mapa -->
-  <style>
-    #map {
-      width: 100%;
-      height: 400px;     /* IMPORTANTE */
-      border-radius: 10px;
-    }
-  </style>
 </head>
 
 <body>
-
 <header>
-  <div id="logo">
-    <img src="favicon_512.png" alt="Logo NALUA">
-  </div>
-
-  <div class="title">
-    <h1>NALUCA</h1>
-    <p>Apoio e Conscientização em Saúde Mental</p>
+  <div class="header-left">
+    <img id="site-logo" src="favicon.png" alt="Logo Na Lua">
+    <p class="subtitle"> Apoio e Conscientização em Saúde Mental</p>
+    <p class="subtitle">Apoio e Conscientização em Saúde Mental</p>
   </div>
 
   <nav>
-    <a href="#inicio">Início</a>
-    <a href="#noticias">Notícias</a>
-    <a href="#ajuda">Ajuda</a>
-    <a href="#mapa">Mapa</a>
-    <a href="#chatbot">Chatbot</a>
+@@ -26,8 +30,9 @@
   </nav>
 </header>
 
+
 <main class="container">
 
-  <!-- INÍCIO -->
+  <!-- HERO -->
   <section id="inicio" class="hero card">
     <div class="left">
-      <h2>Bem-vindo à NALUCA</h2>
-      <p>Plataforma de apoio, informações e direcionamento em saúde mental — acessível, segura e com conteúdos atualizados.</p>
-      <div class="buttons">
-        <button class="chat-btn" id="openChatBtn">💬 Quero ajuda</button>
-        <a href="#mapa" class="chat-btn secondary">📍 Ver mapa</a>
-      </div>
-    </div>
+      <h2>Bem-vindo à NALUA</h2>
+@@ -45,19 +50,21 @@ <h2>Bem-vindo à NALUA</h2>
 
-    <div class="right">
-      <strong>Linha CVV</strong><br>
-      <small>Se estiver em sofrimento emocional, ligue: <b>188</b></small>
-    </div>
-  </section>
-
-  <!-- GRID: Notícias + Ajuda + Mapa + Chatbot -->
   <div class="grid">
-
-    <!-- Notícias -->
     <div>
+      <!-- NOTÍCIAS -->
       <section id="noticias" class="card">
         <h3>Notícias & Atualizações</h3>
         <p class="hint">Últimas informações — atualizadas automaticamente.</p>
@@ -74,62 +47,75 @@
         <button id="loadNews" class="chat-btn secondary">🔄 Atualizar agora</button>
       </section>
 
-      <!-- Ajuda -->
+      <!-- AJUDA RÁPIDA -->
       <section id="ajuda" class="card">
+        <h3> Recursos de Ajuda Rápida</h3>
         <h3>Recursos de Ajuda Rápida</h3>
         <ul>
-          <li>Contato via WhatsApp (exemplo).</li>
+          <li> Contato via WhatsApp.</li>
+          <li> Links úteis: CVV, CAPS, CRAS.</li>
+          <li> Comunidades online seguras.</li>
+          <li>Contato via WhatsApp.</li>
           <li>Links úteis: CVV, CAPS, CRAS.</li>
           <li>Comunidades online seguras.</li>
         </ul>
-
         <div class="buttons">
           <a class="chat-btn" id="whatsappQuick" href="#" target="_blank">💬 WhatsApp</a>
-          <a class="chat-btn secondary" href="https://www.cvv.org.br/" target="_blank">📞 CVV</a>
-        </div>
-      </section>
+@@ -67,24 +74,46 @@ <h3> Recursos de Ajuda Rápida</h3>
     </div>
 
-    <!-- Mapa + Chatbot -->
     <aside>
-
       <!-- MAPA -->
       <section id="mapa" class="card">
+        <h3> Mapa de Apoio</h3>
         <h3>Mapa de Apoio</h3>
+
+        <!-- CAIXA DE FILTROS FUTURÍSTICA -->
+        <div id="map-filters" class="filter-box">
+          <div class="filter-buttons">
+            <button data-cat="caps" class="filter-btn caps">🟪 CAPS</button>
+            <button data-cat="clinicas" class="filter-btn clinicas">🟩 Clínicas</button>
+            <button data-cat="psicologos" class="filter-btn psicologos">🟦 Psicólogos</button>
+            <button data-cat="gratuitos" class="filter-btn gratuitos">🟨 Apoio gratuito</button>
+          </div>
+
+          <div class="radius-buttons">
+            <span>Raio:</span>
+            <button data-radius="5" class="radius-btn">5 km</button>
+            <button data-radius="10" class="radius-btn">10 km</button>
+            <button data-radius="15" class="radius-btn">15 km</button>
+            <button data-radius="20" class="radius-btn">20 km</button>
+          </div>
+        </div>
+
         <div id="map"></div>
       </section>
 
       <!-- CHATBOT -->
       <section id="chatbot" class="card">
         <h3>Chatbot</h3>
+        <p> Mensagem de acolhimento e botão de atendimento.</p>
         <p>Mensagem de acolhimento e botão de atendimento.</p>
         <button class="chat-btn" id="openChatBtn2">Abrir Chat</button>
       </section>
-
     </aside>
   </div>
 
   <footer>
+    <small> Desenvolvido para fins acadêmicos — NA LUA © 2025</small>
     <small>Desenvolvido para fins acadêmicos — NA LUA © 2025</small>
   </footer>
 </main>
 
-<!-- Modal do chatbot -->
+<!-- MODAL CHATBOT -->
 <div class="modal" id="chatModal">
   <div class="panel">
     <button class="close-btn" id="closeModal">&times;</button>
-    <h3>Acolhimento — NALUCA</h3>
-    <p id="welcomeText"></p>
-
-    <div class="buttons">
-      <a id="waSendBtn" class="chat-btn" href="#" target="_blank">💬 Enviar para atendimento</a>
-      <button class="chat-btn secondary" id="closeModal2">Fechar</button>
-    </div>
+@@ -97,6 +126,7 @@ <h3>Acolhimento — NA LUA</h3>
   </div>
 </div>
 
-<!-- Scripts -->
+<!-- SCRIPTS -->
 <script src="script.js"></script>
-
 </body>
 </html>
