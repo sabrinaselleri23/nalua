@@ -84,39 +84,43 @@ nav a:hover { background: rgba(255,255,255,0.03); transform: translateY(-2px); c
 }
 
 
-.filter-buttons, .radius-buttons { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
-.filter-btn, .radius-btn {
-  border:none;
-  padding:6px 14px;
-  border-radius:20px;
-  font-weight:600;
-  cursor:pointer;
-  transition: all 0.25s ease;
-  color:white;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
-}
-.filter-btn.caps { background:#9b5fff; }
-.filter-btn.clinicas { background:#4caf50; }
-.filter-btn.psicologos { background:#2196f3; }
-.filter-btn.gratuitos { background:#ffeb3b; color:#000; }
-.radius-btn { background: var(--accent); }
-.filter-btn:hover, .radius-btn:hover { transform: scale(1.05); box-shadow: 0 0 14px rgba(123,77,187,0.5); }
-.filter-btn.active { box-shadow:0 0 20px #fff; transform: scale(1.08); }
-
-/* POPUPS MAPA */
-.leaflet-popup-content-wrapper {
-  background: rgba(42,0,63,0.95);
+/* --- MAPA ROXO TEMA PERSONALIZADO --- */
+.leaflet-container {
+  background: #3b1166 !important; /* fundo roxo escuro */
   border-radius: var(--round);
-  color: var(--muted);
-  font-size:14px;
-}
-.leaflet-popup-content a { color: var(--accent-2); font-weight:600; text-decoration:none; }
-.leaflet-popup-content a:hover { text-decoration:underline; }
-
-/* RESPONSIVO MAP-FILTER */
-@media(max-width:600px){
-  #map-filters { width:90%; padding:10px; }
-  .filter-buttons, .radius-buttons { flex-direction:column; gap:6px; }
 }
 
+.leaflet-tile-pane {
+  filter: hue-rotate(245deg) saturate(1.3) brightness(0.8);
+}
+
+/* Controles do zoom */
+.leaflet-control-zoom a {
+  background: #6b2fca !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 0 8px rgba(123, 77, 187, 0.6);
+}
+
+.leaflet-control-zoom a:hover {
+  background: #8746f0 !important;
+}
+
+/* Mensagens, popups e caixas */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #5a208e;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(123,77,187,0.5);
+}
+
+.leaflet-popup-tip {
+  background: #5a208e;
+}
+
+/* Botão de localização se existir */
+.leaflet-control-locate {
+  background: #6b2fca;
+  color: white;
 }
