@@ -9,58 +9,93 @@
   <link rel="icon" type="image/png" href="favicon.png">
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <style>
-    /* Estilo básico do modal e chat de desabafo */
-    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index: 9999; }
-    .modal.show { display: flex; }
-    .modal-content { background: #fff; padding: 20px; max-width: 400px; width: 90%; border-radius: 8px; position: relative; }
-    .panel { max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin-bottom: 10px; }
-    #chatInput { width: 100%; padding: 8px; margin-top: 5px; }
-    .close-btn { position: absolute; top: 10px; right: 10px; cursor: pointer; }
+    :root {
+      --bg: #1f0033;
+      --accent: #7b4dbb;
+      --accent-2: #a47be6;
+      --card: #2a003f;
+      --muted: #cfc7e9;
+      --round: 12px;
+      --maxw: 1100px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg), #12001a);
+      color: var(--muted);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 24px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(4px);
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    #site-logo { width: 120px; height: auto; border-radius: 50px; object-fit: contain; }
+    .subtitle { color: var(--muted); font-size: 14px; margin: 0; }
+    nav { margin-left: auto; display: flex; gap: 14px; align-items: center; }
+    nav a { color: var(--muted); text-decoration: none; padding: 8px 12px; border-radius: 10px; transition: all 0.18s; font-weight: 600; font-size: 15px; }
+    nav a:hover { background: rgba(255,255,255,0.03); transform: translateY(-2px); color: white; }
+    .container { max-width: var(--maxw); margin: 24px auto; padding: 0 18px; }
+    .hero { background: linear-gradient(180deg, rgba(123, 77, 187, 0.18), rgba(164, 123, 230, 0.05)); border-radius: var(--round); padding: 28px; display:flex; gap:24px; align-items:center; }
+    .hero h2 { margin:0; font-size:34px; color:white; }
+    .hero p { margin:8px 0 0 0; color:#e9e6ff; opacity:0.9; }
+    .grid { display:grid; grid-template-columns:1fr 360px; gap:20px; margin-top:18px; }
+    .card { background: var(--card); border-radius: var(--round); padding:14px; box-shadow:0 6px 18px rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.02); }
+    .card h3 { margin-top:0; color:white; }
+    .chat-btn { background: linear-gradient(180deg, var(--accent), var(--accent-2)); color:white; border:none; padding:12px 16px; border-radius:12px; cursor:pointer; display:inline-flex; gap:10px; align-items:center; box-shadow:0 8px 20px rgba(123,77,187,0.24); font-weight:700; font-size:15px; text-decoration:none; transition:0.2s; }
+    .chat-btn:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(123,77,187,0.3); }
+    .chat-btn.secondary { background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); box-shadow:none; }
+    #map { height:500px; border-radius:10px; overflow:hidden; }
+    .modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:60; }
+    .modal.show { display:flex; }
+    .modal .panel { width:440px; max-width:96%; background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015)); padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); max-height:90%; overflow-y:auto; }
+    .close-btn { background:transparent; border:none; color:var(--muted); float:right; font-size:18px; cursor:pointer; }
+    footer { margin-top:28px; padding:18px 0; text-align:center; color:rgba(255,255,255,0.6); }
+    @media (max-width:880px){
+      .grid { grid-template-columns:1fr; }
+      nav { display:none; }
+      header { padding:12px; }
+      #site-logo { width:50px; }
+      .hero { flex-direction:column; text-align:center; }
+      .hero .right { width:100%; }
+    }
   </style>
 </head>
-
 <body>
 <header>
   <div class="header-left">
     <img id="site-logo" src="favicon.png" alt="Logo Na Lua">
     <p class="subtitle">Apoio e Conscientização em Saúde Mental</p>
   </div>
-
   <nav>
-    <!-- seu menu -->
+    <!-- menu -->
   </nav>
 </header>
 
 <main class="container">
-  <!-- HERO -->
   <section id="inicio" class="hero card">
     <div class="left">
       <h2>Bem-vindo à NALUA</h2>
+      <p>Encontre apoio e desabafe com nosso chatbot seguro.</p>
     </div>
   </section>
 
   <div class="grid">
     <div>
-      <!-- NOTÍCIAS -->
-      <section id="noticias" class="card">
-        <h3>Notícias & Atualizações</h3>
-        <p class="hint">Últimas informações — atualizadas automaticamente.</p>
-        <div id="newsList"></div>
-        <button id="loadNews" class="chat-btn secondary">🔄 Atualizar agora</button>
-      </section>
-
-      <!-- AJUDA RÁPIDA -->
       <section id="ajuda" class="card">
         <h3>Recursos de Ajuda Rápida</h3>
         <ul>
-          <li>Contato via WhatsApp.</li>
-          <li>Links úteis: CVV, CAPS, CRAS.</li>
-          <li>Comunidades online seguras.</li>
+          <li>Contato via WhatsApp</li>
+          <li>Links úteis: CVV, CAPS, CRAS</li>
         </ul>
         <div class="buttons">
           <a class="chat-btn" id="whatsappQuick" href="#" target="_blank">💬 WhatsApp</a>
@@ -69,28 +104,23 @@
     </div>
 
     <aside>
-      <!-- MAPA -->
       <section id="mapa" class="card">
         <h3>Mapa de Apoio</h3>
-        <div id="map" style="height: 500px;"></div>
+        <div id="map"></div>
       </section>
 
-      <!-- CHATBOT -->
       <section id="chatbot" class="card">
-        <h3>Chatbot</h3>
-        <p>Mensagem de acolhimento e botão de atendimento.</p>
+        <h3>Chatbot de Acolhimento</h3>
+        <p>Converse com nossa IA segura. Se houver risco, será conectado a atendimento humano.</p>
         <button class="chat-btn" id="openChatBtn2">Abrir Chat</button>
-        <button class="chat-btn" id="openBotBtn">💬 Desabafo</button>
       </section>
     </aside>
   </div>
-
   <footer>
     <small>Desenvolvido para fins acadêmicos — NA LUA © 2025</small>
   </footer>
 </main>
 
-<!-- MODAL CHATBOT -->
 <div class="modal" id="chatModal">
   <div class="panel">
     <div class="chat-header">
@@ -103,61 +133,126 @@
   </div>
 </div>
 
-
-<!-- SCRIPTS -->
-<script src="script.js"></script>
+<!-- Scripts -->
 <script>
-  // ==============================
-  // BOTÃO CHAT DE DESABAFO (Nova Janela)
-  // ==============================
-  const openBotBtn = document.getElementById('openBotBtn');
-  openBotBtn.addEventListener('click', () => {
-    const chatWindow = window.open('', 'Desabafo', 'width=400,height=600,resizable=yes');
-    chatWindow.document.write(`
-      <html>
-      <head>
-        <title>Chat de Desabafo — NA LUA</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 0; padding: 10px; }
-          .panel { height: 500px; border: 1px solid #ccc; overflow-y: auto; padding: 5px; margin-bottom: 10px; }
-          textarea { width: 100%; padding: 8px; }
-          button { padding: 8px 12px; margin-top: 5px; }
-        </style>
-      </head>
-      <body>
-        <h3>Chat de Desabafo</h3>
-        <div class="panel" id="chatPanel"></div>
-        <textarea id="chatInput" placeholder="Escreva seus sentimentos..."></textarea>
-        <button id="sendBtn">Enviar</button>
+const chatModal = document.getElementById('chatModal');
+const chatBody = document.getElementById('chatBody');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const openChatBtn = document.getElementById('openChatBtn2');
+const closeModalBtn = document.getElementById('closeModal');
 
-        <script>
-          const chatPanel = document.getElementById('chatPanel');
-          const chatInput = document.getElementById('chatInput');
-          const sendBtn = document.getElementById('sendBtn');
+const PHONE_NUMBER = "5521975452824";
 
-          sendBtn.addEventListener('click', () => {
-            const msg = chatInput.value.trim();
-            if(!msg) return;
-            chatInput.value = "";
+function waUrl(phone, text) {
+  return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
+}
 
-            // Palavras que indicam risco — encaminhar para WhatsApp
-            const palavrasRisco = ["eu não aguento", "suicídio", "não quero mais", "acabou"];
-            const msgLower = msg.toLowerCase();
-            const temRisco = palavrasRisco.some(p => msgLower.includes(p));
+function abrirWhatsApp() {
+  window.open(waUrl(PHONE_NUMBER, "Preciso de ajuda."), "_blank");
+}
 
-            if(temRisco) {
-              chatPanel.innerHTML += "<p><b>Alerta:</b> Vamos te conectar com um atendimento via WhatsApp.</p>";
-              window.open('https://api.whatsapp.com/send?phone=SEU_NUMERO&text=' + encodeURIComponent('Preciso de ajuda agora'), '_blank');
-            } else {
-              chatPanel.innerHTML += "<p><b>IA:</b> " + "Obrigado por compartilhar. Lembre-se de respirar fundo e que você não está sozinho." + "</p>";
-            }
-            chatPanel.scrollTop = chatPanel.scrollHeight;
-          });
-        </script>
-      </body>
-      </html>
-    `);
+openChatBtn.onclick = () => chatModal.classList.add('show');
+closeModalBtn.onclick = () => chatModal.classList.remove('show');
+
+const palavrasDeRisco = ["não aguento","quero acabar","não quero mais","suicídio","acabou","desespero","triste demais","sofrendo"];
+const palavrasTristeza = ["triste","deprimido","sofrendo","cansado","solidão"];
+const palavrasAnsiedade = ["ansioso","preocupado","medo","inseguro","nervoso"];
+const palavrasRaiva = ["raiva","irritado","frustrado","injustiça"];
+const palavrasAlivio = ["aliviado","feliz","grato","melhor"];
+
+function mensagemDeRisco(texto) {
+  texto = texto.toLowerCase();
+  return palavrasDeRisco.some(p => texto.includes(p));
+}
+
+function respostaHumanaInteligente(texto) {
+  texto = texto.toLowerCase();
+  if (mensagemDeRisco(texto)) return "Percebo que você está passando por um momento muito difícil. Vamos conectar você a atendimento humano.";
+  if (palavrasTristeza.some(p => texto.includes(p))) return "Entendo que você está triste. Quer me contar mais sobre o que sente?";
+  if (palavrasAnsiedade.some(p => texto.includes(p))) return "Vejo que você está ansioso(a). Respire fundo comigo.";
+  if (palavrasRaiva.some(p => texto.includes(p))) return "Percebo que está frustrado(a). Podemos conversar sobre isso.";
+  if (palavrasAlivio.some(p => texto.includes(p))) return "Fico feliz que se sinta melhor! Quer compartilhar mais?";
+  return "Obrigado por compartilhar. Estou aqui para ouvir você.";
+}
+
+function adicionarMensagem(conteudo, classe) {
+  const msgEl = document.createElement('div');
+  msgEl.className = `message ${classe}`;
+  msgEl.textContent = conteudo;
+  chatBody.appendChild(msgEl);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function enviarMensagem() {
+  const userMessage = chatInput.value.trim();
+  if (!userMessage) return;
+  chatInput.value = "";
+  adicionarMensagem(userMessage, "user");
+  const resposta = respostaHumanaInteligente(userMessage);
+  setTimeout(() => {
+    adicionarMensagem(resposta, "bot");
+    if (mensagemDeRisco(userMessage)) abrirWhatsApp();
+  }, 500 + Math.random()*500);
+}
+
+sendBtn.onclick = enviarMensagem;
+chatInput.addEventListener('keypress', (e) => { if(e.key==='Enter'){ e.preventDefault(); enviarMensagem(); } });
+</script>
+
+<!-- Google Maps Dark Theme -->
+<script src="https://maps.googleapis.com/maps/api/js?key=SUA_CHAVE_AQUI&libraries=places"></script>
+<script>
+function initMap() {
+  const mapEl = document.getElementById("map");
+  const defaultLocation = { lat: -23.55052, lng: -46.633308 }; // São Paulo
+  const map = new google.maps.Map(mapEl, {
+    center: defaultLocation,
+    zoom: 13,
+    styles: [
+      {elementType: 'geometry', stylers: [{color: '#1f0033'}]},
+      {elementType: 'labels.text.fill', stylers: [{color: '#cfc7e9'}]},
+      {elementType: 'labels.text.stroke', stylers: [{color: '#1f0033'}]},
+      {featureType: 'administrative', elementType: 'geometry', stylers:[{color:'#2a003f'}]},
+      {featureType: 'poi', elementType:'geometry', stylers:[{color:'#2a003f'}]},
+      {featureType: 'road', elementType:'geometry', stylers:[{color:'#3a003f'}]},
+      {featureType: 'water', elementType:'geometry', stylers:[{color:'#12001a'}]}
+    ]
   });
+
+  const infoWindow = new google.maps.InfoWindow();
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
+        map.setCenter(userPos);
+        new google.maps.Marker({ position: userPos, map: map, title: "Você está aqui", icon:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png" });
+        buscarApoio(userPos, map, infoWindow);
+      },
+      () => buscarApoio(defaultLocation, map, infoWindow)
+    );
+  } else {
+    buscarApoio(defaultLocation, map, infoWindow);
+  }
+}
+
+function buscarApoio(location, map, infoWindow) {
+  const service = new google.maps.places.PlacesService(map);
+  const tipos = ["health","hospital","local_government_office"];
+  tipos.forEach(tipo => {
+    service.nearbySearch({ location, radius: 5000, keyword: tipo }, (results, status) => {
+      if(status === google.maps.places.PlacesServiceStatus.OK && results) {
+        results.forEach(place => {
+          const marker = new google.maps.Marker({ map, position: place.geometry.location, title: place.name });
+          marker.addListener("click", () => infoWindow.setContent(`<strong>${place.name}</strong><br>${place.vicinity}`) && infoWindow.open(map, marker));
+        });
+      }
+    });
+  });
+}
+
+window.addEventListener("load", initMap);
 </script>
 </body>
 </html>
