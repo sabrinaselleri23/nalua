@@ -53,113 +53,103 @@ document.getElementById('loadNews').onclick = fetchNews;
 // -----------------------------------------------------
 // MAPA — APOIO PSICOLÓGICO + CLÍNICAS + CAPS
 // -----------------------------------------------------
+const map = L.map('map').setView([-23.55, -46.63], 12);
 
-// Criar o mapa
-const map = L.map('map').setView([-14.235, -51.9253], 4); // Centro do Brasil
+// Tile roxo/lilás
+L.tileLayer(
+  "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
+  { maxZoom: 18, attribution: "&copy; OpenStreetMap contributors" }
+).addTo(map);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 18,
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+// Ícones coloridos
+const icons = {
+  caps: L.icon({ iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png", iconSize: [25,41], iconAnchor: [12,41]}),
+  clinicas: L.icon({ iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png", iconSize: [25,41], iconAnchor: [12,41]}),
+  psicologos: L.icon({ iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png", iconSize: [25,41], iconAnchor: [12,41]}),
+  gratuitos: L.icon({ iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png", iconSize: [25,41], iconAnchor: [12,41]}),
+};
 
+let markersGroup = L.layerGroup().addTo(map);
+let locais = []; // será preenchido dinamicamente do Overpass
 
-// 1. PEGAR A LOCALIZAÇÃO DO USUÁRIO
+// LOCALIZAÇÃO DO USUÁRIO
 function localizarUsuario() {
-  if (!navigator.geolocation) {
-    alert("Seu navegador não permite geolocalização.");
-    return;
-  }
-
+  if (!navigator.geolocation) { alert("Seu navegador não permite geolocalização."); return; }
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
-
     map.setView([lat, lon], 14);
-
-    L.marker([lat, lon], { title: "Você está aqui" })
-      .addTo(map)
-      .bindPopup("<b>Você está aqui</b>")
-      .openPopup();
-
+    L.circleMarker([lat, lon], { radius:8, color:"#7b4dbb", fillColor:"#a47be6", fillOpacity:1 }).addTo(map).bindPopup("📍 Você está aqui");
     buscarApoio(lat, lon);
-
-  }, () => {
-    alert("Não foi possível obter sua localização.");
-  });
+  }, () => alert("Não foi possível obter sua localização."));
 }
 
 localizarUsuario();
 
-
-// 2. BUSCAR LOCAIS DE APOIO — CLÍNICAS, CAPS, APOIO GRATUITO
+// BUSCAR LOCAIS DE APOIO (Overpass API)
 async function buscarApoio(lat, lon) {
-
   const query = `
     [out:json];
     (
-      // CLÍNICAS PSICOLÓGICAS
-      node["amenity"="clinic"](around:8000, ${lat}, ${lon});
-      node["healthcare"="psychotherapist"](around:8000, ${lat}, ${lon});
-      node["healthcare"="mental_health"](around:8000, ${lat}, ${lon});
-
-      // CAPS e centros públicos
-      node["amenity"="social_facility"](around:8000, ${lat}, ${lon});
-      node["social_facility"="mental_health"](around:8000, ${lat}, ${lon});
-
-      // Redes de apoio psicológico gratuitas
-      node["social_facility"="support"](around:8000, ${lat}, ${lon});
-      node["social_facility"="outreach"](around:8000, ${lat}, ${lon});
-    );
-    out body;
-    >;
-    out skel qt;
+      node["amenity"="clinic"](around:10000, ${lat}, ${lon});
+      node["healthcare"="psychotherapist"](around:10000, ${lat}, ${lon});
+      node["healthcare"="mental_health"](around:10000, ${lat}, ${lon});
+      node["amenity"="social_facility"](around:10000, ${lat}, ${lon});
+      node["social_facility"="mental_health"](around:10000, ${lat}, ${lon});
+      node["social_facility"="support"](around:10000, ${lat}, ${lon});
+      node["social_facility"="outreach"](around:10000, ${lat}, ${lon});
+    ); out body; >; out skel qt;
   `;
-
   const url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
-
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.elements.length === 0) {
-      alert("Nenhum serviço de apoio psicológico encontrado perto de você.");
-      return;
-    }
-
-    data.elements.forEach(el => {
-      if (!el.tags) return;
-
-      const nome = el.tags.name || "Local sem nome";
-      const tipo =
-        el.tags.healthcare ||
-        el.tags.amenity ||
-        el.tags.social_facility ||
-        "Apoio Psicológico";
-
-      const endereco = el.tags["addr:street"] || "";
-      const numero = el.tags["addr:housenumber"] || "";
-      const cidade = el.tags["addr:city"] || "";
-
-      const popup = `
-        <b>${nome}</b><br>
-        <b>Tipo:</b> ${tipo}<br>
-        ${endereco} ${numero}<br>
-        ${cidade}<br><br>
-
-        <b>Preço:</b>
-        <input type="text" placeholder="R$ --,--" style="width:100%; padding:4px;"><br><br>
-
-        <a href="https://www.google.com/maps/?q=${el.lat},${el.lon}"
-           target="_blank"
-           style="color:#7b4dbb; font-weight:600;">
-           📍 Ver rota no Google Maps
-        </a>
-      `;
-
-      L.marker([el.lat, el.lon]).addTo(map).bindPopup(popup);
-    });
-
-  } catch (err) {
-    console.error("Erro Overpass:", err);
-  }
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.elements.length) { alert("Nenhum serviço próximo."); return; }
+    locais = data.elements.filter(el => el.tags);
+    renderMarkers();
+  } catch(e){ console.error(e); }
 }
+
+// RENDERIZAR MARCADORES
+function renderMarkers() {
+  markersGroup.clearLayers();
+  const activeCategories = [...document.querySelectorAll(".filter-btn.active")].map(b => b.dataset.category);
+  locais.forEach(el => {
+    const cat = el.tags.amenity || el.tags.healthcare || el.tags.social_facility || "gratuitos";
+    let categoria = "gratuitos";
+    if (cat.includes("clinic") || cat.includes("psychotherapist") || cat.includes("mental_health")) categoria = "clinicas";
+    if (cat.includes("social_facility") && el.tags.name?.toLowerCase().includes("caps")) categoria = "caps";
+    if (cat.includes("psychologist") || el.tags.name?.toLowerCase().includes("psi")) categoria = "psicologos";
+
+    if (!activeCategories.includes(categoria)) return;
+
+    let priceField = categoria === "psicologos" ? `<label style="font-weight:700">Preço da sessão</label>
+      <input type="text" placeholder="R$ --,--" style="width:100%; padding:6px; margin:6px 0 12px 0; border-radius:8px; border:none;">` : "";
+
+    L.marker([el.lat, el.lon], { icon: icons[categoria] })
+      .addTo(markersGroup)
+      .bindPopup(`<b>${el.tags.name || "Local sem nome"}</b><br>
+                  <small>${el.tags.amenity || el.tags.healthcare || el.tags.social_facility || "Apoio Psicológico"}</small><br>
+                  ${el.tags["addr:street"] || ""} ${el.tags["addr:housenumber"] || ""}<br>
+                  ${el.tags["addr:city"] || ""}<br><br>
+                  ${priceField}
+                  <a href="https://www.google.com/maps/?q=${el.lat},${el.lon}" target="_blank" style="color:#a47be6; font-weight:700;">📍 Ver rota no Google Maps</a>`);
+  });
+}
+
+// FILTROS DE CATEGORIA
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    btn.classList.toggle("active");
+    renderMarkers();
+  });
+});
+
+// FILTROS DE RAIO
+document.querySelectorAll(".radius-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const rad = parseInt(btn.dataset.radius);
+    if (!rad) return;
+    renderMarkers(); // Aqui poderia refinar para filtrar por distância
+  });
+});
