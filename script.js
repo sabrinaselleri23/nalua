@@ -9,14 +9,13 @@ if (welcomeTextEl) welcomeTextEl.textContent = acolhimento;
 
 // Modal e botões
 const chatModal = document.getElementById('chatModal');
+const chatBody = document.getElementById('chatBody');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
 const openChatBtn = document.getElementById('openChatBtn2');
 const closeModalBtn = document.getElementById('closeModal');
 
-if (openChatBtn && chatModal) openChatBtn.onclick = () => chatModal.classList.add('show');
-if (closeModalBtn && chatModal) closeModalBtn.onclick = () => chatModal.classList.remove('show');
-
-// WhatsApp
-const PHONE_NUMBER = "5521975452824"; // substitua pelo número real
+const PHONE_NUMBER = "5521975452824";
 const MESSAGE = "Agradeço pelo acolhimento. Preciso de ajuda.";
 
 function waUrl(phone, text) {
@@ -26,30 +25,13 @@ function waUrl(phone, text) {
     : `https://api.whatsapp.com/send?text=${encoded}`;
 }
 
-const waSendBtn = document.getElementById('waSendBtn');
-if (waSendBtn) waSendBtn.href = waUrl(PHONE_NUMBER, MESSAGE);
-
-const whatsappQuick = document.getElementById('whatsappQuick');
-if (whatsappQuick) whatsappQuick.onclick = e => {
-  e.preventDefault();
+function abrirWhatsApp() {
   window.open(waUrl(PHONE_NUMBER, MESSAGE), "_blank");
-};
+}
 
-// ==============================
-// CHATBOT IA + APOIO PSICOLÓGICO
-// ==============================
+openChatBtn.onclick = () => chatModal.classList.add('show');
+closeModalBtn.onclick = () => chatModal.classList.remove('show');
 
-const chatPanel = chatModal.querySelector('.panel');
-
-// Criação do textarea
-const chatInput = document.createElement('textarea');
-chatInput.placeholder = "Digite sua mensagem...";
-chatInput.style.width = "100%";
-chatInput.style.marginTop = "12px";
-chatInput.style.padding = "8px";
-chatPanel.appendChild(chatInput);
-
-// Palavras de risco e categorias
 const palavrasDeRisco = ["não aguento","quero acabar","não quero mais","suicídio","acabou","desespero","triste demais","sofrendo"];
 const palavrasTristeza = ["triste","deprimido","sofrendo","cansado","solidão"];
 const palavrasAnsiedade = ["ansioso","preocupado","medo","inseguro","nervoso"];
@@ -114,37 +96,30 @@ function respostaHumanaInteligente(texto) {
   return respostasGenericas[Math.floor(Math.random() * respostasGenericas.length)];
 }
 
-// Adicionar mensagem no painel
 function adicionarMensagem(conteudo, classe) {
   const msgEl = document.createElement('div');
   msgEl.className = `message ${classe}`;
-  msgEl.innerHTML = conteudo;
-  chatPanel.appendChild(msgEl);
-  chatPanel.scrollTop = chatPanel.scrollHeight;
+  msgEl.textContent = conteudo;
+  chatBody.appendChild(msgEl);
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-// Envio de mensagens
-async function enviarMensagem() {
+function enviarMensagem() {
   const userMessage = chatInput.value.trim();
   if (!userMessage) return;
   chatInput.value = "";
 
-  adicionarMensagem(`<b>Você:</b> ${userMessage}`, "user");
+  adicionarMensagem(userMessage, "user");
 
-  if (mensagemDeRisco(userMessage)) {
-    adicionarMensagem(`<b>IA:</b> ${respostaHumanaInteligente(userMessage)}`, "bot");
-    abrirWhatsApp();
-    return;
-  }
-
-  const aiReply = respostaHumanaInteligente(userMessage);
+  const resposta = respostaHumanaInteligente(userMessage);
   setTimeout(() => {
-    adicionarMensagem(`<b>IA:</b> ${aiReply}`, "bot");
-  }, 500 + Math.random()*500); // atraso natural
+    adicionarMensagem(resposta, "bot");
+    if (mensagemDeRisco(userMessage)) abrirWhatsApp();
+  }, 500 + Math.random()*500);
 }
 
-// Eventos de teclado e botão
-chatInput.addEventListener('keypress', e => {
+sendBtn.onclick = enviarMensagem;
+chatInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
     enviarMensagem();
