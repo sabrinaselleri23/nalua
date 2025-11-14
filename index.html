@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NALUA — Apoio e Conscientização em Saúde Mental</title>
 
-  <!-- Ícone do site -->
   <link rel="icon" type="image/png" href="favicon.png">
 
-  <!-- Estilos -->
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -78,22 +76,13 @@
       <section id="mapa" class="card">
         <h3>Mapa de Apoio</h3>
 
-        <!-- CAIXA DE FILTROS FUTURÍSTICA -->
-        <div id="map-filters" class="filter-box">
-          <div class="filter-buttons">
-            <button data-cat="caps" class="filter-btn caps">🟪 CAPS</button>
-            <button data-cat="clinicas" class="filter-btn clinicas">🟩 Clínicas</button>
-            <button data-cat="psicologos" class="filter-btn psicologos">🟦 Psicólogos</button>
-            <button data-cat="gratuitos" class="filter-btn gratuitos">🟨 Apoio gratuito</button>
-          </div>
-
-          <div class="radius-buttons">
-            <span>Raio:</span>
-            <button data-radius="5" class="radius-btn">5 km</button>
-            <button data-radius="10" class="radius-btn">10 km</button>
-            <button data-radius="15" class="radius-btn">15 km</button>
-            <button data-radius="20" class="radius-btn">20 km</button>
-          </div>
+        <!-- FILTROS (agora fora do mapa, SEM flutuar em cima dele) -->
+        <div id="map-filters-inline">
+          <button class="filter-btn" data-filter="all">Todos</button>
+          <button class="filter-btn caps" data-filter="caps">CAPS</button>
+          <button class="filter-btn acolhimento" data-filter="clinicas">Clínicas</button>
+          <button class="filter-btn psicologos" data-filter="psicologos">Psicólogos</button>
+          <button class="filter-btn gratuitos" data-filter="gratuitos">Gratuitos</button>
         </div>
 
         <div id="map"></div>
@@ -126,7 +115,6 @@
   </div>
 </div>
 
-<!-- SCRIPTS -->
 <script src="script.js"></script>
 </body>
 </html>
