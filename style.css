@@ -67,25 +67,23 @@ nav a:hover { background: rgba(255,255,255,0.03); transform: translateY(-2px); c
 .chat-btn:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(123,77,187,0.3); }
 .chat-btn.secondary { background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); box-shadow:none; }
 
-/* CAIXA DE FILTROS SOBRE O MAPA */
+
 #map-filters {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: static;        /* antes era absolute — isso removia do lugar */
+  margin-top: 12px;
   background: rgba(123, 77, 187, 0.15);
   padding: 12px 18px;
   border-radius: var(--round);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 50;
+  z-index: 5;
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.05);
-  box-shadow: 0 0 18px rgba(123,77,187,0.35);
+  box-shadow: 0 0 14px rgba(123,77,187,0.25);
 }
 
-/* BOTÕES DE FILTRO */
+
 .filter-buttons, .radius-buttons { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
 .filter-btn, .radius-btn {
   border:none;
