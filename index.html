@@ -92,13 +92,17 @@
 
 <!-- MODAL CHATBOT -->
 <div class="modal" id="chatModal">
-  <div class="modal-content">
-    <span class="close-btn" id="closeModal">&times;</span>
-    <h3>Acolhimento — NA LUA</h3>
-    <div class="panel"></div>
-    <a id="waSendBtn" href="#" target="_blank">Ir para WhatsApp</a>
+  <div class="panel">
+    <div class="chat-header">
+      <h3>Acolhimento — NA LUA</h3>
+      <button class="close-btn" id="closeModal">&times;</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <textarea id="chatInput" placeholder="Digite sua mensagem..."></textarea>
+    <button id="sendBtn">Enviar</button>
   </div>
 </div>
+
 
 <!-- SCRIPTS -->
 <script src="script.js"></script>
