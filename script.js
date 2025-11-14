@@ -3,27 +3,18 @@
 // ==============================
 const acolhimento = "Agradecemos que você tenha sido forte — procurar ajuda é um grande passo. Podemos te conectar com um atendimento via WhatsApp agora.";
 
-// Exibir mensagem de acolhimento no modal
 const welcomeTextEl = document.getElementById('welcomeText');
-if (welcomeTextEl) {
-  welcomeTextEl.textContent = acolhimento;
-}
+if (welcomeTextEl) welcomeTextEl.textContent = acolhimento;
 
-// Botão de abrir modal chatbot
 const chatModal = document.getElementById('chatModal');
 const openChatBtn = document.getElementById('openChatBtn2');
 const closeModalBtn = document.getElementById('closeModal');
 
-if (openChatBtn && chatModal) {
-  openChatBtn.onclick = () => chatModal.classList.add('show');
-}
-
-if (closeModalBtn && chatModal) {
-  closeModalBtn.onclick = () => chatModal.classList.remove('show');
-}
+if (openChatBtn && chatModal) openChatBtn.onclick = () => chatModal.classList.add('show');
+if (closeModalBtn && chatModal) closeModalBtn.onclick = () => chatModal.classList.remove('show');
 
 // WhatsApp
-const PHONE_NUMBER = ""; // Coloque seu número +5511XXXXXXXXX ou deixe vazio
+const PHONE_NUMBER = ""; // +5511XXXXXXXXX
 const MESSAGE = "Agradeço pelo acolhimento. Preciso de ajuda.";
 
 function waUrl(phone, text) {
@@ -33,20 +24,14 @@ function waUrl(phone, text) {
     : `https://api.whatsapp.com/send?text=${encoded}`;
 }
 
-// Botão do modal
 const waSendBtn = document.getElementById('waSendBtn');
-if (waSendBtn) {
-  waSendBtn.href = waUrl(PHONE_NUMBER, MESSAGE);
-}
+if (waSendBtn) waSendBtn.href = waUrl(PHONE_NUMBER, MESSAGE);
 
-// Botão rápido
 const whatsappQuick = document.getElementById('whatsappQuick');
-if (whatsappQuick) {
-  whatsappQuick.onclick = e => {
-    e.preventDefault();
-    window.open(waUrl(PHONE_NUMBER, MESSAGE), "_blank");
-  };
-}
+if (whatsappQuick) whatsappQuick.onclick = e => {
+  e.preventDefault();
+  window.open(waUrl(PHONE_NUMBER, MESSAGE), "_blank");
+};
 
 // ==============================
 // NOTÍCIAS AUTOMÁTICAS
@@ -79,14 +64,14 @@ if (loadNewsBtn) loadNewsBtn.onclick = fetchNews;
 // ==============================
 // MAPA LEAFLET
 // ==============================
-const map = L.map('map').setView([-14.235, -51.9253], 4); // centro do Brasil
+const map = L.map('map').setView([-14.235, -51.9253], 4); // Centro do Brasil
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 18,
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Pontos fixos (exemplo)
+// Pontos fixos
 const pontos = [
   [-23.5489, -46.6388, 'Centro de Apoio A', 'Atendimento psicológico'],
   [-23.5712, -46.6417, 'Clínica Comunitária B', 'Triagem e encaminhamento'],
@@ -94,9 +79,7 @@ const pontos = [
 ];
 
 pontos.forEach(p => {
-  L.marker([p[0], p[1]])
-    .addTo(map)
-    .bindPopup(`<b>${p[2]}</b><br>${p[3]}`);
+  L.marker([p[0], p[1]]).addTo(map).bindPopup(`<b>${p[2]}</b><br>${p[3]}`);
 });
 
 // ==============================
@@ -137,7 +120,6 @@ async function buscarLocais(lat, lon) {
   );
   out body;
   `;
-
   const url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
 
   try {
@@ -150,14 +132,7 @@ async function buscarLocais(lat, lon) {
       const numero = el.tags["addr:housenumber"] || "";
       const cidade = el.tags["addr:city"] || "";
       const tipo = el.tags.amenity || el.tags.healthcare || "Atendimento";
-
-      const popup = `
-<b>${nome}</b><br>
-${tipo}<br>
-${endereco} ${numero}<br>
-${cidade}
-`;
-
+      const popup = `<b>${nome}</b><br>${tipo}<br>${endereco} ${numero}<br>${cidade}`;
       L.marker([el.lat, el.lon]).addTo(map).bindPopup(popup);
     });
   } catch (err) {
@@ -166,33 +141,53 @@ ${cidade}
 }
 
 // ==============================
-// INTEGRAÇÃO DE IA NO CHATBOT
+// CHATBOT IA + APOIO PSICOLÓGICO
 // ==============================
+const chatPanel = chatModal.querySelector('.panel');
 const chatInput = document.createElement('textarea');
 chatInput.placeholder = "Digite sua mensagem...";
 chatInput.style.width = "100%";
 chatInput.style.marginTop = "12px";
 chatInput.style.padding = "8px";
-
-const chatPanel = chatModal.querySelector('.panel');
 chatPanel.appendChild(chatInput);
+
+const palavrasDeRisco = ["não aguento","quero acabar","não quero mais","suicídio","acabou","desespero","triste demais","sofrendo"];
+
+function mensagemDeRisco(texto) {
+  texto = texto.toLowerCase();
+  return palavrasDeRisco.some(p => texto.includes(p));
+}
+
+async function chamarIA(userMessage) {
+  // Exemplo placeholder. Substitua por chamada real ao OpenAI se tiver API Key
+  return `Resposta acolhedora da IA para: "${userMessage}"`;
+}
+
+function abrirWhatsApp() {
+  window.open(waUrl(PHONE_NUMBER, MESSAGE), "_blank");
+}
 
 chatInput.addEventListener('keypress', async (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
     const userMessage = chatInput.value.trim();
     if (!userMessage) return;
-
-    // Limpar campo
     chatInput.value = "";
 
-    // Aqui você chamaria sua IA. Exemplo usando fetch para sua API:
-    // const res = await fetch('/chat-api', { method: 'POST', body: JSON.stringify({ message: userMessage }) });
-    // const data = await res.json();
-    // const aiReply = data.reply;
+    const userMsgEl = document.createElement('div');
+    userMsgEl.innerHTML = `<b>Você:</b> ${userMessage}`;
+    chatPanel.appendChild(userMsgEl);
 
-    const aiReply = "Aqui poderia vir a resposta da IA (ChatGPT ou outro)."; // Placeholder
+    if (mensagemDeRisco(userMessage)) {
+      const alerta = document.createElement('div');
+      alerta.innerHTML = `<b>IA:</b> Vejo que você está passando por um momento difícil. Vou te conectar com um atendimento humano agora.`;
+      chatPanel.appendChild(alerta);
+      chatPanel.scrollTop = chatPanel.scrollHeight;
+      abrirWhatsApp();
+      return;
+    }
 
+    const aiReply = await chamarIA(userMessage);
     const msgEl = document.createElement('div');
     msgEl.innerHTML = `<b>IA:</b> ${aiReply}`;
     chatPanel.appendChild(msgEl);
