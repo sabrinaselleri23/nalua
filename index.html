@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NALUCA — Apoio e Conscientização em Saúde Mental</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+<header>
+  <div id="logo"></div>
+  <div class="title">
+    <h1>NALUCA</h1>
+    <p>Apoio e Conscientização em Saúde Mental</p>
+  </div>
+  <nav>
+    <a href="#inicio">Início</a>
+    <a href="#noticias">Notícias</a>
+    <a href="#ajuda">Ajuda</a>
+    <a href="#mapa">Mapa</a>
+    <a href="#chatbot">Chatbot</a>
+  </nav>
+</header>
+
+<main class="container">
+  <section id="inicio" class="hero card">
+    <div class="left">
+      <h2>Bem-vindo à NALUCA</h2>
+      <p>Plataforma de apoio, informações e direcionamento em saúde mental — acessível, segura e com conteúdos atualizados.</p>
+      <div class="buttons">
+        <button class="chat-btn" id="openChatBtn">💬 Quero ajuda</button>
+        <a href="#mapa" class="chat-btn secondary">📍 Ver mapa</a>
+      </div>
+    </div>
+    <div class="right">
+      <strong>Linha CVV</strong><br>
+      <small>Se estiver em sofrimento emocional, ligue: <b>188</b></small>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div>
+      <section id="noticias" class="card">
+        <h3>Notícias & Atualizações</h3>
+        <p class="hint">Últimas informações — atualizadas automaticamente.</p>
+        <div id="newsList"></div>
+        <button id="loadNews" class="chat-btn secondary">🔄 Atualizar agora</button>
+      </section>
+
+      <section id="ajuda" class="card">
+        <h3>Recursos de Ajuda Rápida</h3>
+        <ul>
+          <li>Contato via WhatsApp (exemplo).</li>
+          <li>Links úteis: CVV, CAPS, CRAS.</li>
+          <li>Comunidades online seguras.</li>
+        </ul>
+        <div class="buttons">
+          <a class="chat-btn" id="whatsappQuick" href="#" target="_blank">💬 WhatsApp</a>
+          <a class="chat-btn secondary" href="https://www.cvv.org.br/" target="_blank">📞 CVV</a>
+        </div>
+      </section>
+    </div>
+
+    <aside>
+      <section id="mapa" class="card">
+        <h3>Mapa de Apoio</h3>
+        <div id="map"></div>
+      </section>
+
+      <section id="chatbot" class="card">
+        <h3>Chatbot</h3>
+        <p>Mensagem de acolhimento e botão de atendimento.</p>
+        <button class="chat-btn" id="openChatBtn2">Abrir Chat</button>
+      </section>
+    </aside>
+  </div>
+
+  <footer>
+    <small>Desenvolvido para fins acadêmicos — NALUCA © 2025</small>
+  </footer>
+</main>
+
+<div class="modal" id="chatModal">
+  <div class="panel">
+    <button class="close-btn" id="closeModal">&times;</button>
+    <h3>Acolhimento — NALUCA</h3>
+    <p id="welcomeText"></p>
+    <div class="buttons">
+      <a id="waSendBtn" class="chat-btn" href="#" target="_blank">💬 Enviar para atendimento</a>
+      <button class="chat-btn secondary" id="closeModal2">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
