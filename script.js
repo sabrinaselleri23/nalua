@@ -1,226 +1,155 @@
-/* ============================================================
-   CHATBOT
-============================================================ */
+@@ -1,4 +1,6 @@
+// Chatbot acolhimento e WhatsApp
+// ----------------------
+// CHATBOT ACOLHIMENTO
+// ----------------------
+const acolhimento = "Agradecemos que você tenha sido forte — procurar ajuda é um grande passo. Podemos te conectar com um atendimento via WhatsApp agora.";
+document.getElementById('welcomeText').textContent = acolhimento;
 
-const acolhimento =
-  "Agradecemos que você tenha sido forte — procurar ajuda é um grande passo. Podemos te conectar com um atendimento via WhatsApp agora.";
-
-document.getElementById("welcomeText").textContent = acolhimento;
-
-const modal = document.getElementById("chatModal");
-const openBtns = [
-  document.getElementById("openChatBtn"),
-  document.getElementById("openChatBtn2"),
-];
-
-openBtns.forEach((btn) =>
-  btn.addEventListener("click", () => modal.classList.add("show"))
-);
-
-document.getElementById("closeModal").onclick = () =>
-  modal.classList.remove("show");
-document.getElementById("closeModal2").onclick = () =>
-  modal.classList.remove("show");
+@@ -10,40 +12,134 @@ document.getElementById('closeModal2').onclick = () => modal.classList.remove('s
 
 const PHONE_NUMBER = "";
 const MESSAGE = "Agradeço pelo acolhimento. Preciso de ajuda.";
 
 function waUrl(phone, text) {
   const encoded = encodeURIComponent(text);
-  return phone
-    ? `https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`
-    : `https://api.whatsapp.com/send?text=${encoded}`;
+  return phone ? `https://api.whatsapp.com/send?phone=${phone}&text=${encoded}` :
+                 `https://api.whatsapp.com/send?text=${encoded}`;
+  return phone ? `https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`
+               : `https://api.whatsapp.com/send?text=${encoded}`;
 }
 
-document.getElementById("waSendBtn").href = waUrl(PHONE_NUMBER, MESSAGE);
+document.getElementById('waSendBtn').href = waUrl(PHONE_NUMBER, MESSAGE);
 
-document.getElementById("whatsappQuick").onclick = (e) => {
+document.getElementById('whatsappQuick').onclick = e => {
   e.preventDefault();
   window.open(waUrl(PHONE_NUMBER, MESSAGE), "_blank");
 };
 
-/* ============================================================
-   NOTÍCIAS AUTOMÁTICAS
-============================================================ */
+// Notícias automáticas
 
-const newsList = document.getElementById("newsList");
+// ----------------------
+// NOTÍCIAS AUTOMÁTICAS
+// ----------------------
+const newsList = document.getElementById('newsList');
 
 async function fetchNews() {
-  const res = await fetch("https://api.quotable.io/random");
+  const res = await fetch('https://api.quotable.io/random');
   const j = await res.json();
 
-  const item = document.createElement("div");
-  item.className = "news-item";
-  item.innerHTML = `
-    <strong>${j.author}</strong>
-    <p>${j.content}</p>
-  `;
+  const item = document.createElement('div');
+  item.className = 'news-item';
+  item.innerHTML = `<strong>${j.author}</strong><p>${j.content}</p>`;
 
   newsList.prepend(item);
-
-  while (newsList.children.length > 6) {
-    newsList.removeChild(newsList.lastChild);
-  }
+  while (newsList.children.length > 6) newsList.removeChild(newsList.lastChild);
 }
 
 fetchNews();
 setInterval(fetchNews, 12000);
-document.getElementById("loadNews").onclick = fetchNews;
+document.getElementById('loadNews').onclick = fetchNews;
 
-/* ============================================================
-   MAPA ROXO + GEOLOCALIZAÇÃO REAL
-============================================================ */
+// Mapa Leaflet
+const map = L.map('map').setView([-23.55052, -46.633308], 11);
 
-const map = L.map("map").setView([-23.55, -46.63], 12);
 
-L.tileLayer(
-  "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
-  {
-    maxZoom: 18,
-    attribution: "&copy; OpenStreetMap contributors",
-  }
-).addTo(map);
+// -----------------------------------------------------
+// NOVO MAPA — LOCALIZAÇÃO + CAPS + CLÍNICAS + APOIO
+// -----------------------------------------------------
 
-/* ============================================================
-   ÍCONES PERSONALIZADOS
-============================================================ */
+// Criar o mapa
+const map = L.map('map').setView([-14.235, -51.9253], 4); // centro do Brasil
 
-const icons = {
-  caps: L.icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  }),
-
-  clinicas: L.icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  }),
-
-  psicologos: L.icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  }),
-
-  gratuitos: L.icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  }),
-};
-
-/* ============================================================
-   BANCO DE DADOS DE EXEMPLO
-============================================================ */
-
-const locais = [
-  {
-    nome: "CAPS Jardim Norte",
-    cidade: "São Paulo - SP",
-    endereco: "Rua das Flores, 120",
-    tipo: "Centro de Atenção Psicossocial (SUS)",
-    categoria: "caps",
-    lat: -23.5489,
-    lon: -46.6388,
-  },
-  {
-    nome: "Clínica Renovamente",
-    cidade: "São Paulo - SP",
-    endereco: "Av. Brasil, 421",
-    tipo: "Clínica psicológica",
-    categoria: "clinicas",
-    lat: -23.5712,
-    lon: -46.6417,
-  },
-  {
-    nome: "Espaço Psi Acolher",
-    cidade: "São Paulo - SP",
-    endereco: "Rua Horizonte, 88",
-    tipo: "Psicólogos e saúde mental",
-    categoria: "psicologos",
-    lat: -23.5632,
-    lon: -46.655,
-  },
-  {
-    nome: "Centro Comunitário Vida",
-    cidade: "São Paulo - SP",
-    endereco: "Rua Esperança, 77",
-    tipo: "Apoio psicológico gratuito",
-    categoria: "gratuitos",
-    lat: -23.5601,
-    lon: -46.6408,
-  },
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19, attribution: '&copy; OpenStreetMap contributors'
+  maxZoom: 18,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+const pontos = [
+  [-23.5489, -46.6388, 'Centro de Apoio A', 'Atendimento psicológico (baixo custo)'],
+  [-23.5712, -46.6417, 'Clínica Comunitária B', 'Triagem e encaminhamento'],
+  [-23.5632, -46.6550, 'Ponto de Informação C', 'Grupo de apoio semanal']
 ];
+pontos.forEach(p => L.marker([p[0], p[1]]).addTo(map).bindPopup(`<b>${p[2]}</b><br>${p[3]}`));
 
-/* ============================================================
-   ADICIONAR MARCADORES NO MAPA
-============================================================ */
 
-let markersGroup = L.layerGroup().addTo(map);
+// ----------------------
+// 1. PEGAR LOCALIZAÇÃO DO USUÁRIO
+// ----------------------
+function localizarUsuario() {
+  if (!navigator.geolocation) {
+    alert("Geolocalização não suportada no seu navegador.");
+    return;
+  }
 
-function renderMarkers() {
-  markersGroup.clearLayers();
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
 
-  locais.forEach((loc) => {
-    const marker = L.marker([loc.lat, loc.lon], {
-      icon: icons[loc.categoria],
-    });
+    map.setView([lat, lon], 14);
 
-    let priceField = "";
+    L.marker([lat, lon], { title: "Você está aqui" })
+      .addTo(map)
+      .bindPopup("<b>Você está aqui</b>")
+      .openPopup();
 
-    if (loc.categoria === "psicologos") {
-      priceField = `
-        <label style="font-weight:700">Preço da sessão</label>
-        <input type="text" placeholder="R$ --,--"
-        style="width:100%; padding:6px; margin:6px 0 12px 0;
-        border-radius:8px; border:none;">
-      `;
-    }
+    buscarLocais(lat, lon);
 
-    marker.bindPopup(`
-      <b>${loc.nome}</b><br>
-      <small>${loc.tipo}</small><br>
-      ${loc.endereco}<br>
-      ${loc.cidade}<br><br>
-
-      ${priceField}
-
-      <a href="https://www.google.com/maps/?q=${loc.lat},${loc.lon}"
-         target="_blank"
-         style="color:#a47be6; font-weight:700;">
-         📍 Ver rota no Google Maps
-      </a>
-    `);
-
-    marker.addTo(markersGroup);
+  }, () => {
+    alert("Não foi possível obter sua localização.");
   });
 }
 
-renderMarkers();
+localizarUsuario();
 
-/* ============================================================
-   GEOLOCALIZAÇÃO DO USUÁRIO
-============================================================ */
 
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition((pos) => {
-    const { latitude, longitude } = pos.coords;
+// ----------------------
+// 2. BUSCAR LOCAIS NO OPENSTREETMAP
+// ----------------------
+async function buscarLocais(lat, lon) {
 
-    map.setView([latitude, longitude], 14);
+  const query = `
+    [out:json];
+    (
+      node["amenity"="clinic"](around:5000, ${lat}, ${lon});
+      node["healthcare"="psychotherapist"](around:5000, ${lat}, ${lon});
+      node["amenity"="social_facility"](around:5000, ${lat}, ${lon});
+      node["social_facility"="outreach"](around:5000, ${lat}, ${lon});
+      node["healthcare"="mental_health"](around:5000, ${lat}, ${lon});
+    );
+    out body;
+    >;
+    out skel qt;
+  `;
 
-    L.circleMarker([latitude, longitude], {
-      radius: 8,
-      color: "#7b4dbb",
-      fillColor: "#a47be6",
-      fillOpacity: 1,
-    })
-      .addTo(map)
-      .bindPopup("📍 Você está aqui");
-  });
+  const url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    data.elements.forEach(el => {
+      if (!el.tags) return;
+
+      const nome = el.tags.name || "Local sem nome";
+      const endereco = el.tags["addr:street"] || "";
+      const numero = el.tags["addr:housenumber"] || "";
+      const cidade = el.tags["addr:city"] || "";
+      const tipo = el.tags.amenity || el.tags.healthcare || "Atendimento";
+
+      const popup = `
+        <b>${nome}</b><br>
+        ${tipo}<br>
+        ${endereco} ${numero}<br>
+        ${cidade}<br><br>
+        <b>Preço:</b>
+        <input type="text" placeholder="R$ --,--" style="width:100%; padding:4px;">
+      `;
+
+      L.marker([el.lat, el.lon]).addTo(map).bindPopup(popup);
+    });
+
+  } catch (err) {
+    console.error("Erro Overpass:", err);
+  }
 }
