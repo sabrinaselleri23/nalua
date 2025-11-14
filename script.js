@@ -156,11 +156,12 @@ async function buscarLocais(lat, lon) {
       const tipo = el.tags.amenity || el.tags.healthcare || "Atendimento";
 
       const popup = `
-        <b>${nome}</b><br>
-        ${tipo}<br>
-        ${endereco} ${numero}<br>
-        ${cidade}<br><br>
-        <b>Preço:</b> <input type="text" placeholder="R$ --,--" style="width:100%; padding:4px;">
+  <b>${nome}</b><br>
+  ${tipo}<br>
+  ${endereco} ${numero}<br>
+  ${cidade}
+`;
+
       `;
       L.marker([el.lat, el.lon]).addTo(map).bindPopup(popup);
     });
