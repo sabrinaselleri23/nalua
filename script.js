@@ -51,11 +51,11 @@ document.getElementById('loadNews').onclick = fetchNews;
 
 
 // -----------------------------------------------------
-// NOVO MAPA — LOCALIZAÇÃO + CAPS + CLÍNICAS + APOIO
+// MAPA — APOIO PSICOLÓGICO + CLÍNICAS + CAPS
 // -----------------------------------------------------
 
 // Criar o mapa
-const map = L.map('map').setView([-14.235, -51.9253], 4); // centro do Brasil
+const map = L.map('map').setView([-14.235, -51.9253], 4); // Centro do Brasil
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 18,
@@ -63,12 +63,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-// ----------------------
-// 1. PEGAR LOCALIZAÇÃO DO USUÁRIO
-// ----------------------
+// 1. PEGAR A LOCALIZAÇÃO DO USUÁRIO
 function localizarUsuario() {
   if (!navigator.geolocation) {
-    alert("Geolocalização não suportada no seu navegador.");
+    alert("Seu navegador não permite geolocalização.");
     return;
   }
 
@@ -83,7 +81,7 @@ function localizarUsuario() {
       .bindPopup("<b>Você está aqui</b>")
       .openPopup();
 
-    buscarLocais(lat, lon);
+    buscarApoio(lat, lon);
 
   }, () => {
     alert("Não foi possível obter sua localização.");
@@ -93,19 +91,24 @@ function localizarUsuario() {
 localizarUsuario();
 
 
-// ----------------------
-// 2. BUSCAR LOCAIS NO OPENSTREETMAP
-// ----------------------
-async function buscarLocais(lat, lon) {
+// 2. BUSCAR LOCAIS DE APOIO — CLÍNICAS, CAPS, APOIO GRATUITO
+async function buscarApoio(lat, lon) {
 
   const query = `
     [out:json];
     (
-      node["amenity"="clinic"](around:5000, ${lat}, ${lon});
-      node["healthcare"="psychotherapist"](around:5000, ${lat}, ${lon});
-      node["amenity"="social_facility"](around:5000, ${lat}, ${lon});
-      node["social_facility"="outreach"](around:5000, ${lat}, ${lon});
-      node["healthcare"="mental_health"](around:5000, ${lat}, ${lon});
+      // CLÍNICAS PSICOLÓGICAS
+      node["amenity"="clinic"](around:8000, ${lat}, ${lon});
+      node["healthcare"="psychotherapist"](around:8000, ${lat}, ${lon});
+      node["healthcare"="mental_health"](around:8000, ${lat}, ${lon});
+
+      // CAPS e centros públicos
+      node["amenity"="social_facility"](around:8000, ${lat}, ${lon});
+      node["social_facility"="mental_health"](around:8000, ${lat}, ${lon});
+
+      // Redes de apoio psicológico gratuitas
+      node["social_facility"="support"](around:8000, ${lat}, ${lon});
+      node["social_facility"="outreach"](around:8000, ${lat}, ${lon});
     );
     out body;
     >;
@@ -118,22 +121,39 @@ async function buscarLocais(lat, lon) {
     const response = await fetch(url);
     const data = await response.json();
 
+    if (data.elements.length === 0) {
+      alert("Nenhum serviço de apoio psicológico encontrado perto de você.");
+      return;
+    }
+
     data.elements.forEach(el => {
       if (!el.tags) return;
 
       const nome = el.tags.name || "Local sem nome";
+      const tipo =
+        el.tags.healthcare ||
+        el.tags.amenity ||
+        el.tags.social_facility ||
+        "Apoio Psicológico";
+
       const endereco = el.tags["addr:street"] || "";
       const numero = el.tags["addr:housenumber"] || "";
       const cidade = el.tags["addr:city"] || "";
-      const tipo = el.tags.amenity || el.tags.healthcare || "Atendimento";
 
       const popup = `
         <b>${nome}</b><br>
-        ${tipo}<br>
+        <b>Tipo:</b> ${tipo}<br>
         ${endereco} ${numero}<br>
         ${cidade}<br><br>
+
         <b>Preço:</b>
-        <input type="text" placeholder="R$ --,--" style="width:100%; padding:4px;">
+        <input type="text" placeholder="R$ --,--" style="width:100%; padding:4px;"><br><br>
+
+        <a href="https://www.google.com/maps/?q=${el.lat},${el.lon}"
+           target="_blank"
+           style="color:#7b4dbb; font-weight:600;">
+           📍 Ver rota no Google Maps
+        </a>
       `;
 
       L.marker([el.lat, el.lon]).addTo(map).bindPopup(popup);
