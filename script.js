@@ -62,7 +62,6 @@ async function fetchNews() {
     item.innerHTML = `<strong>${data.author}</strong><p>${data.content}</p>`;
     newsList.prepend(item);
 
-    // Limitar a 6 notícias
     while (newsList.children.length > 6) {
       newsList.removeChild(newsList.lastChild);
     }
@@ -71,11 +70,9 @@ async function fetchNews() {
   }
 }
 
-// Buscar notícias ao carregar e a cada 12s
 fetchNews();
 setInterval(fetchNews, 12000);
 
-// Botão de atualizar notícias
 const loadNewsBtn = document.getElementById('loadNews');
 if (loadNewsBtn) loadNewsBtn.onclick = fetchNews;
 
@@ -91,7 +88,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Pontos fixos (exemplo)
 const pontos = [
-  [-23.5489, -46.6388, 'Centro de Apoio A', 'Atendimento psicológico (baixo custo)'],
+  [-23.5489, -46.6388, 'Centro de Apoio A', 'Atendimento psicológico'],
   [-23.5712, -46.6417, 'Clínica Comunitária B', 'Triagem e encaminhamento'],
   [-23.5632, -46.6550, 'Ponto de Informação C', 'Grupo de apoio semanal']
 ];
@@ -129,7 +126,6 @@ function localizarUsuario() {
 
 localizarUsuario();
 
-// Busca locais próximos via Overpass API
 async function buscarLocais(lat, lon) {
   const query = `
   [out:json];
@@ -156,16 +152,50 @@ async function buscarLocais(lat, lon) {
       const tipo = el.tags.amenity || el.tags.healthcare || "Atendimento";
 
       const popup = `
-  <b>${nome}</b><br>
-  ${tipo}<br>
-  ${endereco} ${numero}<br>
-  ${cidade}
+<b>${nome}</b><br>
+${tipo}<br>
+${endereco} ${numero}<br>
+${cidade}
 `;
 
-      `;
       L.marker([el.lat, el.lon]).addTo(map).bindPopup(popup);
     });
   } catch (err) {
     console.error("Erro Overpass:", err);
   }
 }
+
+// ==============================
+// INTEGRAÇÃO DE IA NO CHATBOT
+// ==============================
+const chatInput = document.createElement('textarea');
+chatInput.placeholder = "Digite sua mensagem...";
+chatInput.style.width = "100%";
+chatInput.style.marginTop = "12px";
+chatInput.style.padding = "8px";
+
+const chatPanel = chatModal.querySelector('.panel');
+chatPanel.appendChild(chatInput);
+
+chatInput.addEventListener('keypress', async (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) return;
+
+    // Limpar campo
+    chatInput.value = "";
+
+    // Aqui você chamaria sua IA. Exemplo usando fetch para sua API:
+    // const res = await fetch('/chat-api', { method: 'POST', body: JSON.stringify({ message: userMessage }) });
+    // const data = await res.json();
+    // const aiReply = data.reply;
+
+    const aiReply = "Aqui poderia vir a resposta da IA (ChatGPT ou outro)."; // Placeholder
+
+    const msgEl = document.createElement('div');
+    msgEl.innerHTML = `<b>IA:</b> ${aiReply}`;
+    chatPanel.appendChild(msgEl);
+    chatPanel.scrollTop = chatPanel.scrollHeight;
+  }
+});
