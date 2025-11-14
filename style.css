@@ -21,7 +21,7 @@ body {
 header {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
   padding: 18px 24px;
   background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
   position: sticky;
@@ -31,7 +31,6 @@ header {
   backdrop-filter: blur(4px);
 }
 
-/* NOVO HEADER COM LOGO SUBSTITUINDO TEXTO */
 .header-left {
   display: flex;
   align-items: center;
@@ -39,7 +38,7 @@ header {
 }
 
 #site-logo {
-  width: 64px;   /* aumente para 80px, 100px, 120px... */
+  width: 120px;   /* aumente para 80px, 100px, 120px... */
   height: auto;
   border-radius: 10px;
   object-fit: contain;
