@@ -1,1 +1,23 @@
+name:
+
+on:
+  push:
+    branches:
+      - main 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 
+        run: |
+          sed -i 's/GOOGLE_MAPS_API_KEY_AIzaSyC2yUeyQ5LDDd582TpZZxXRl1pvmp6ehmw/${{ secrets.GOOGLE_MAPS_API_KEY }}/g' index.html
+
+      - name: 
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
 
