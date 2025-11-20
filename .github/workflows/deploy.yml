@@ -20,7 +20,7 @@ jobs:
 
       - name: Substituir placeholder da chave do Google Maps
         run: |
-          sed -i "s/GOOGLE_MAPS_API_KEYAIzaSyC2yUeyQ5LDDd582TpZZxXRl1pvmp6ehmw/${{ secrets.GOOGLE_MAPS_API_KEY }}/g" index.html
+          sed -i "s/GOOGLE_MAPS_API_KEY/${{ secrets.GOOGLE_MAPS_API_KEY }}/g" index.html
 
       - name: Deploy para GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
