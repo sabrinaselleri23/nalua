@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NALUA — Apoio e Conscientização em Saúde Mental</title>
 
-  <!-- Ícone do site -->
   <link rel="icon" type="image/png" href="favicon.png">
 
-  <!-- Estilos -->
   <style>
     :root {
       --bg: #1f0033;
@@ -77,7 +75,7 @@
     <p class="subtitle">Apoio e Conscientização em Saúde Mental</p>
   </div>
   <nav>
-    <!-- menu -->
+    
   </nav>
 </header>
 
@@ -155,9 +153,9 @@ function abrirWhatsApp() {
 openChatBtn.onclick = () => chatModal.classList.add('show');
 closeModalBtn.onclick = () => chatModal.classList.remove('show');
 
-const palavrasDeRisco = ["não aguento","quero acabar","não quero mais","suicídio","acabou","desespero","triste demais","sofrendo"];
-const palavrasTristeza = ["triste","deprimido","sofrendo","cansado","solidão"];
-const palavrasAnsiedade = ["ansioso","preocupado","medo","inseguro","nervoso"];
+const palavrasDeRisco = ["não aguento","quero morrer", "me matar", "morrer", "cortar", "quero acabar","não quero mais","suicídio","acabou","desespero","triste demais","sofrendo"];
+const palavrasTristeza = ["triste","deprimido","sofrendo","cansado","solidão", "morte"];
+const palavrasAnsiedade = ["ansioso","preocupado","medo","inseguro","nervoso", "dificil"];
 const palavrasRaiva = ["raiva","irritado","frustrado","injustiça"];
 const palavrasAlivio = ["aliviado","feliz","grato","melhor"];
 
@@ -169,9 +167,9 @@ function mensagemDeRisco(texto) {
 function respostaHumanaInteligente(texto) {
   texto = texto.toLowerCase();
   if (mensagemDeRisco(texto)) return "Percebo que você está passando por um momento muito difícil. Vamos conectar você a atendimento humano.";
-  if (palavrasTristeza.some(p => texto.includes(p))) return "Entendo que você está triste. Quer me contar mais sobre o que sente?";
-  if (palavrasAnsiedade.some(p => texto.includes(p))) return "Vejo que você está ansioso(a). Respire fundo comigo.";
-  if (palavrasRaiva.some(p => texto.includes(p))) return "Percebo que está frustrado(a). Podemos conversar sobre isso.";
+  if (palavrasTristeza.some(p => texto.includes(p))) return "Entendo que você está triste. Quer me contar mais sobre o que sente?", "Desde quando isso tem lhe afetado?", "Já compartilhou com alguém a sua dor?";
+  if (palavrasAnsiedade.some(p => texto.includes(p))) return "Vejo que você está ansioso(a). Respire fundo comigo.", "me conte uma lembrança boa, que lhe traz paz", "o que você fez no dia de hoje? me conte com detalhes";
+  if (palavrasRaiva.some(p => texto.includes(p))) return "Percebo que está frustrado(a). Podemos conversar sobre isso.", "Você sabe que seres humanos são falhos, não sabe? ninguém é perfeito", "Não tente ser algo que é impossível de existir";
   if (palavrasAlivio.some(p => texto.includes(p))) return "Fico feliz que se sinta melhor! Quer compartilhar mais?";
   return "Obrigado por compartilhar. Estou aqui para ouvir você.";
 }
