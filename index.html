@@ -74,9 +74,7 @@
     <img id="site-logo" src="favicon.png" alt="Logo Na Lua">
     <p class="subtitle">Apoio e Conscientização em Saúde Mental</p>
   </div>
-  <nav>
-    
-  </nav>
+  <nav></nav>
 </header>
 
 <main class="container">
@@ -131,126 +129,15 @@
   </div>
 </div>
 
-<!-- Scripts -->
+
 <script>
-const chatModal = document.getElementById('chatModal');
-const chatBody = document.getElementById('chatBody');
-const chatInput = document.getElementById('chatInput');
-const sendBtn = document.getElementById('sendBtn');
-const openChatBtn = document.getElementById('openChatBtn2');
-const closeModalBtn = document.getElementById('closeModal');
-
-const PHONE_NUMBER = "5521975452824";
-
-function waUrl(phone, text) {
-  return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
-}
-
-function abrirWhatsApp() {
-  window.open(waUrl(PHONE_NUMBER, "Preciso de ajuda."), "_blank");
-}
-
-openChatBtn.onclick = () => chatModal.classList.add('show');
-closeModalBtn.onclick = () => chatModal.classList.remove('show');
-
-const palavrasDeRisco = ["não aguento","quero morrer", "me matar", "morrer", "cortar", "quero acabar","não quero mais","suicídio","acabou","desespero","triste demais","sofrendo"];
-const palavrasTristeza = ["triste","deprimido","sofrendo","cansado","solidão", "morte"];
-const palavrasAnsiedade = ["ansioso","preocupado","medo","inseguro","nervoso", "dificil"];
-const palavrasRaiva = ["raiva","irritado","frustrado","injustiça"];
-const palavrasAlivio = ["aliviado","feliz","grato","melhor"];
-
-function mensagemDeRisco(texto) {
-  texto = texto.toLowerCase();
-  return palavrasDeRisco.some(p => texto.includes(p));
-}
-
-function respostaHumanaInteligente(texto) {
-  texto = texto.toLowerCase();
-  if (mensagemDeRisco(texto)) return "Percebo que você está passando por um momento muito difícil. Vamos conectar você a atendimento humano.";
-  if (palavrasTristeza.some(p => texto.includes(p))) return "Entendo que você está triste. Quer me contar mais sobre o que sente?", "Desde quando isso tem lhe afetado?", "Já compartilhou com alguém a sua dor?";
-  if (palavrasAnsiedade.some(p => texto.includes(p))) return "Vejo que você está ansioso(a). Respire fundo comigo.", "me conte uma lembrança boa, que lhe traz paz", "o que você fez no dia de hoje? me conte com detalhes";
-  if (palavrasRaiva.some(p => texto.includes(p))) return "Percebo que está frustrado(a). Podemos conversar sobre isso.", "Você sabe que seres humanos são falhos, não sabe? ninguém é perfeito", "Não tente ser algo que é impossível de existir";
-  if (palavrasAlivio.some(p => texto.includes(p))) return "Fico feliz que se sinta melhor! Quer compartilhar mais?";
-  return "Obrigado por compartilhar. Estou aqui para ouvir você.";
-}
-
-function adicionarMensagem(conteudo, classe) {
-  const msgEl = document.createElement('div');
-  msgEl.className = `message ${classe}`;
-  msgEl.textContent = conteudo;
-  chatBody.appendChild(msgEl);
-  chatBody.scrollTop = chatBody.scrollHeight;
-}
-
-function enviarMensagem() {
-  const userMessage = chatInput.value.trim();
-  if (!userMessage) return;
-  chatInput.value = "";
-  adicionarMensagem(userMessage, "user");
-  const resposta = respostaHumanaInteligente(userMessage);
-  setTimeout(() => {
-    adicionarMensagem(resposta, "bot");
-    if (mensagemDeRisco(userMessage)) abrirWhatsApp();
-  }, 500 + Math.random()*500);
-}
-
-sendBtn.onclick = enviarMensagem;
-chatInput.addEventListener('keypress', (e) => { if(e.key==='Enter'){ e.preventDefault(); enviarMensagem(); } });
 </script>
 
-<!-- Google Maps Dark Theme -->
-<script src="https://maps.googleapis.com/maps/api/js?key=SUA_CHAVE_AQUI&libraries=places"></script>
-<script>
-function initMap() {
-  const mapEl = document.getElementById("map");
-  const defaultLocation = { lat: -23.55052, lng: -46.633308 }; // São Paulo
-  const map = new google.maps.Map(mapEl, {
-    center: defaultLocation,
-    zoom: 13,
-    styles: [
-      {elementType: 'geometry', stylers: [{color: '#1f0033'}]},
-      {elementType: 'labels.text.fill', stylers: [{color: '#cfc7e9'}]},
-      {elementType: 'labels.text.stroke', stylers: [{color: '#1f0033'}]},
-      {featureType: 'administrative', elementType: 'geometry', stylers:[{color:'#2a003f'}]},
-      {featureType: 'poi', elementType:'geometry', stylers:[{color:'#2a003f'}]},
-      {featureType: 'road', elementType:'geometry', stylers:[{color:'#3a003f'}]},
-      {featureType: 'water', elementType:'geometry', stylers:[{color:'#12001a'}]}
-    ]
-  });
-
-  const infoWindow = new google.maps.InfoWindow();
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
-        map.setCenter(userPos);
-        new google.maps.Marker({ position: userPos, map: map, title: "Você está aqui", icon:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png" });
-        buscarApoio(userPos, map, infoWindow);
-      },
-      () => buscarApoio(defaultLocation, map, infoWindow)
-    );
-  } else {
-    buscarApoio(defaultLocation, map, infoWindow);
-  }
-}
-
-function buscarApoio(location, map, infoWindow) {
-  const service = new google.maps.places.PlacesService(map);
-  const tipos = ["health","hospital","local_government_office"];
-  tipos.forEach(tipo => {
-    service.nearbySearch({ location, radius: 5000, keyword: tipo }, (results, status) => {
-      if(status === google.maps.places.PlacesServiceStatus.OK && results) {
-        results.forEach(place => {
-          const marker = new google.maps.Marker({ map, position: place.geometry.location, title: place.name });
-          marker.addListener("click", () => infoWindow.setContent(`<strong>${place.name}</strong><br>${place.vicinity}`) && infoWindow.open(map, marker));
-        });
-      }
-    });
-  });
-}
-
-window.addEventListener("load", initMap);
+<!-- Google Maps API (CORRIGIDO) -->
+<script 
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi5mAuX-3HOvxJGimEYuaRgcH5KZi9wg4&libraries=places&callback=initMap" 
+  async defer>
 </script>
+
 </body>
 </html>
